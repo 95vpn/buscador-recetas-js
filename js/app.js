@@ -1,6 +1,9 @@
 function inicarApp() {
 
-    const selectCategories = document.querySelector('#categorias')
+    const selectCategories = document.querySelector('#categorias');
+    selectCategories.addEventListener('change', seleccionarCategoria);
+
+    const resultado = document.querySelector('#resultado')
 
     obtenerCategorias();
 
@@ -21,6 +24,59 @@ function inicarApp() {
             selectCategories.appendChild(option)
             console.log(option)
         });
+    }
+    
+    function seleccionarCategoria(e) {
+        const categoria = e.target.value;
+        const url = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${categoria}`
+        fetch(url)
+            .then(respuesta => respuesta.json())
+            .then(resultado => mostrarRecetas(resultado.meals))
+    }
+
+    function mostrarRecetas(recetas = []) {
+        //iterar los resultados
+        recetas.forEach(receta => {
+            const { idMeal, strMeal, strMealThumb } = receta
+
+            const recetaContenerdor = document.createElement('DIV');
+            recetaContenerdor.classList.add('receta-contenedor');
+
+            const recetaCard = document.createElement('DIV');
+            recetaCard.classList.add('receta-contenedor-card');
+
+            const recetaImagen = document.createElement('IMG');
+            recetaImagen.classList.add('receta-contenedor-imagen');
+            recetaImagen.alt = `Imagen de la receta ${strMeal}`;
+            recetaImagen.src = strMealThumb;
+
+            const recetaCardBody = document.createElement('DIV');
+            recetaCardBody.classList.add('card-body')
+
+            const recetaHeading = document.createElement('H3')
+            recetaHeading.classList.add('card-title');
+            recetaHeading.textContent = strMeal;
+
+            const recetaButton = document.createElement('BUTTON');
+            recetaButton.classList.add('card-button');
+            recetaButton.textContent = 'Ver Receta';
+
+            //Inyectar en el codigo HTML
+            recetaCardBody.appendChild(recetaHeading);
+            recetaCardBody.appendChild(recetaButton);
+
+            recetaCard.appendChild(recetaImagen);
+            recetaCard.appendChild(recetaCardBody);
+
+            recetaContenerdor.appendChild(recetaCard)
+
+            resultado.appendChild(recetaContenerdor)
+
+
+            console.log(recetaHeading)
+
+
+        })
     }
 
 }
