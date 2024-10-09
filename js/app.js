@@ -4,6 +4,7 @@ function inicarApp() {
     selectCategories.addEventListener('change', seleccionarCategoria);
 
     const resultado = document.querySelector('#resultado')
+    const modal = document.querySelector('#modal')
 
     obtenerCategorias();
 
@@ -35,6 +36,14 @@ function inicarApp() {
     }
 
     function mostrarRecetas(recetas = []) {
+
+        limpiarHTML(resultado)
+
+        const heading = document.createElement('H2');
+        heading.classList.add('aviso');
+        heading.textContent = recetas.length ? 'Resultados' : 'No hay Resultados';
+        resultado.appendChild(heading)
+
         //iterar los resultados
         recetas.forEach(receta => {
             const { idMeal, strMeal, strMealThumb } = receta
@@ -60,6 +69,10 @@ function inicarApp() {
             const recetaButton = document.createElement('BUTTON');
             recetaButton.classList.add('card-button');
             recetaButton.textContent = 'Ver Receta';
+            
+            recetaButton.onclick = function() {
+                seleccionarReceta(idMeal)
+            }
 
             //Inyectar en el codigo HTML
             recetaCardBody.appendChild(recetaHeading);
@@ -72,11 +85,25 @@ function inicarApp() {
 
             resultado.appendChild(recetaContenerdor)
 
-
-            console.log(recetaHeading)
-
-
         })
+    }
+
+    function seleccionarReceta(id) {
+        const url = `https://themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
+
+        fetch(url)
+            .then(respuesta => respuesta.json())
+            .then(resultado => mostrarRecetaModal(resultado.meals[0]))
+    }
+
+    function mostrarRecetaModal(receta) {
+
+    }
+
+    function limpiarHTML(selector) {
+        while(selector.firstChild) {
+            selector.removeChild(selector.firstChild)
+        }
     }
 
 }
