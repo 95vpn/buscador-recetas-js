@@ -4,9 +4,15 @@ function inicarApp() {
     selectCategories.addEventListener('change', seleccionarCategoria);
 
     const resultado = document.querySelector('#resultado')
-    const modal = document.querySelector('#modal')
+    const modal = document.querySelector('#modal');
+    const modalContent = document.querySelector('#modal-content');
+    const closeModal = document.querySelector('#close-modal')
 
     obtenerCategorias();
+
+    closeModal.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
 
     function obtenerCategorias() {
         const url = 'https://www.themealdb.com/api/json/v1/1/categories.php'
@@ -72,6 +78,7 @@ function inicarApp() {
             
             recetaButton.onclick = function() {
                 seleccionarReceta(idMeal)
+                modal.style.display = 'flex'
             }
 
             //Inyectar en el codigo HTML
@@ -98,6 +105,34 @@ function inicarApp() {
 
     function mostrarRecetaModal(receta) {
 
+        
+        limpiarHTMLModal(modalContent)
+        const { idMeal, strInstructions, strMeal, strMealThumb } = receta;
+        console.log(receta)
+
+        const ingredientes = document.createElement('DIV');
+        ingredientes.classList.add('container-ingredientes');
+
+        ingredientes.textContent = strMeal;
+        ingredientes.innerHTML = `
+            <h2>${strMeal}</h2>
+            <img class="imagen" src="${strMealThumb}" alt="receta ${strMeal}"/>
+            <h3>Instrucciones</h3>
+            <h3>${strInstructions}</h3>
+        `
+
+       
+        modalContent.appendChild(ingredientes);
+
+        
+
+
+    }
+
+    function limpiarHTMLModal(selector) {
+        while(selector.firstChild) {
+            selector.removeChild(selector.firstChild)
+        }
     }
 
     function limpiarHTML(selector) {
