@@ -143,12 +143,66 @@ function inicarApp() {
         }
         ingredientes.appendChild(listGroup)
 
+        const modalFooter = document.querySelector('.modal-footer')
+        limpiarHTML(modalFooter)
+
+        //Botones de cerrar y favorito
+        const btnFavorito = document.createElement('BUTTON');
+        btnFavorito.classList.add('save-favorities')
+        btnFavorito.textContent = 'Guardar Favorito'
+        btnFavorito.textContent = existeStorage(idMeal) ? 'Eliminar Favorito' : 'Guardar Favorito'
+
+        //localStorage
+        btnFavorito.onclick = function() {
+
+            if(existeStorage(idMeal)) {
+                eliminarFavorito(idMeal)
+                btnFavorito.textContent = 'Guardar Favorito'
+                return 
+            }
+
+            agregarFavorito({
+                id: idMeal,
+                titulo: strMeal,
+                img: strMealThumb
+            })
+            btnFavorito.textContent = 'Eliminar Favorito'
+        }
+
+        const btnCerrar = document.createElement
+        ('BUTTON');
+        btnCerrar.classList.add('save-favorities')
+        btnCerrar.textContent = 'Cerrar'
+
+        btnCerrar.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        modalFooter.appendChild(btnFavorito)
+        modalFooter.appendChild(btnCerrar)
+
        
         modalContent.appendChild(ingredientes);
 
         
 
 
+    }
+
+    function agregarFavorito(receta) {
+        const favoritos = JSON.parse(localStorage.getItem('favoritos')) ?? []
+        localStorage.setItem('favoritos', JSON.stringify([...favoritos, receta]))
+    }
+
+    function eliminarFavorito(id) {
+        const favoritos = JSON.parse(localStorage.getItem('favoritos')) ?? []
+        const nuevosFavoritos = favoritos.filter(favorito => favorito.id !== id)
+        localStorage.setItem('favoritos', JSON.stringify(nuevosFavoritos));
+    }
+
+    function existeStorage(id) {
+        const favoritos = JSON.parse(localStorage.getItem('favoritos')) ?? []
+        return favoritos.some(favorito => favorito.id === id)
     }
 
     function limpiarHTMLModal(selector) {
