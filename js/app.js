@@ -119,7 +119,29 @@ function inicarApp() {
             <img class="imagen" src="${strMealThumb}" alt="receta ${strMeal}"/>
             <h3>Instrucciones</h3>
             <h3>${strInstructions}</h3>
+            <h3>Ingredientes y Cantidades</h3>
         `
+
+        const listGroup = document.createElement('UL');
+        listGroup.classList.add('list-group')
+        //mostrar cantidades e ingredientes
+        for (let i = 1; i < 20; i++) {
+            if(receta[`strIngredient${i}`]) {
+                const ingrediente = receta[`strIngredient${i}`]
+                const cantidad = receta[`strMeasure${i}`]
+
+
+                const ingredienteLi = document.createElement('LI');
+
+                ingredienteLi.classList.add('list-grupo-item');
+                ingredienteLi.textContent = `${ingrediente} - ${cantidad}`
+
+                listGroup.appendChild(ingredienteLi)
+                
+            }
+            
+        }
+        ingredientes.appendChild(listGroup)
 
        
         modalContent.appendChild(ingredientes);
