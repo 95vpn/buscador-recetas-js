@@ -1,4 +1,3 @@
-
 .container-modal {
     background-color: rgba(0, 255, 255, 0.316);
     position: fixed;
@@ -13,25 +12,33 @@
     display: none;
 }
 
-.modal{
+.modal {
     background-color: blue;
     padding: 25px;
     border-radius: 25px;
     /* width: 300px; Ancho del modal */
-    max-height: 400px; /* Altura máxima antes de habilitar el scroll */
-    overflow-y: auto; 
+    max-height: 400px;
+    /* Altura máxima antes de habilitar el scroll */
+    overflow-y: auto;
 }
 
-.modal-button-closed{
+.modal-button-closed {
     position: relative;
 }
 
-.modal-button-closed button{
+.modal-button-closed button {
     position: absolute;
     top: 10px;
     right: 10px;
 }
 
-.modal-button-closed button :hover{
+.modal-button-closed button :hover {
     color: black;
+}
+
+#toast {
+    position: fixed;
+    top: 0;
+    z-index: 10;
+    display: none;
 }
