@@ -1,18 +1,29 @@
 function inicarApp() {
 
-    const selectCategories = document.querySelector('#categorias');
-    selectCategories.addEventListener('change', seleccionarCategoria);
-
     const resultado = document.querySelector('#resultado')
+    const selectCategories = document.querySelector('#categorias');
+    
+    if(selectCategories){
+        selectCategories.addEventListener('change', seleccionarCategoria);
+        obtenerCategorias();
+    }
+
+    const favoritosDiv = document.querySelector(".favoritos");
+    if(favoritosDiv) {
+        obtenerFavoritos()
+    }
+    
+
+    // const resultado = document.querySelector('#resultado')
     const modal = document.querySelector('#modal');
     const modalContent = document.querySelector('#modal-content');
-    const closeModal = document.querySelector('#close-modal')
+    // const closeModal = document.querySelector('#close-modal')
 
-    obtenerCategorias();
+    
 
-    closeModal.addEventListener('click', () => {
-        modal.style.display = 'none';
-    });
+    // closeModal.addEventListener('click', () => {
+        // modal.style.display = 'none';
+    // });
 
     function obtenerCategorias() {
         const url = 'https://www.themealdb.com/api/json/v1/1/categories.php'
@@ -24,12 +35,12 @@ function inicarApp() {
 
     function mostrarCategorias(categorias = []) {
         categorias.forEach(categoria => {
-            console.log(categoria)
+            
             const option = document.createElement('OPTION');
             option.value = categoria.strCategory
             option.textContent = categoria.strCategory
             selectCategories.appendChild(option)
-            console.log(option)
+            
         });
     }
     
@@ -62,22 +73,22 @@ function inicarApp() {
 
             const recetaImagen = document.createElement('IMG');
             recetaImagen.classList.add('receta-contenedor-imagen');
-            recetaImagen.alt = `Imagen de la receta ${strMeal}`;
-            recetaImagen.src = strMealThumb;
+            recetaImagen.alt = `Imagen de la receta ${strMeal ?? receta.titulo}`;
+            recetaImagen.src = strMealThumb ?? receta.img;
 
             const recetaCardBody = document.createElement('DIV');
             recetaCardBody.classList.add('card-body')
 
             const recetaHeading = document.createElement('H3')
             recetaHeading.classList.add('card-title');
-            recetaHeading.textContent = strMeal;
+            recetaHeading.textContent = strMeal ?? receta.titulo;
 
             const recetaButton = document.createElement('BUTTON');
             recetaButton.classList.add('card-button');
             recetaButton.textContent = 'Ver Receta';
             
             recetaButton.onclick = function() {
-                seleccionarReceta(idMeal)
+                seleccionarReceta(idMeal ?? receta.id)
                 modal.style.display = 'flex'
             }
 
@@ -215,6 +226,18 @@ function inicarApp() {
         
         toastBody.textContent = mensaje;
 
+    }
+
+    function obtenerFavoritos(){
+        const favoritos = JSON.parse(localStorage.getItem('favoritos')) ?? [];
+        if(favoritos.length){
+            mostrarRecetas(favoritos)
+            return;
+        }
+        const noFavoritos = document.createElement('P')
+        noFavoritos.textContent = 'No hay favoritos aún';
+        noFavoritos.classList.add('favoritos-parrafo')
+        favoritosDiv.appendChild(noFavoritos)
     }
 
     function limpiarHTMLModal(selector) {
